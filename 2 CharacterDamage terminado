@@ -1,0 +1,45 @@
+public class CharacterDamage : MonoBehaviour
+{
+    [SerializeField] float pDamage = 0;
+    Animator animator;
+    TurretLife turretlife;
+    Grab_and_drop move;
+    [SerializeField] AudioSource hurtSFX=null;
+    [SerializeField] string hit = "";
+    JinxALV jinx;
+
+    void Start(){
+        animator = GetComponentInChildren<Animator>();
+        move = GetComponent<Grab_and_drop>();
+        jinx = gameObject.GetComponent<JinxALV>();
+    }
+
+
+    void OnCollisionStay(Collision collision)
+    {
+        if (!move.grabed)
+        {//Para que no golpee con objeto en la mano
+            if (collision.gameObject.CompareTag("Turret"))
+            {
+                turretlife = collision.gameObject.GetComponent<TurretLife>();
+
+                if (Input.GetButtonDown(hit))
+                {
+                    turretlife.lifeT -= pDamage; //Daño
+                    if (turretlife.lifeT <= 0)
+                    {
+                        jinx.kill = true;
+                    }
+                    animator.SetTrigger("Hit"); //Activa la animación de golpe
+                    turretlife.turretHurt.Play();
+                    turretlife.destructionSound.Play();
+                    if (!hurtSFX.isPlaying)
+                    {
+                        hurtSFX.Play();
+                    }
+                }
+            }
+        }
+
+    }
+}
