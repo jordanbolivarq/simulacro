@@ -1,0 +1,21 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class plusTime : MonoBehaviour
+{
+    [SerializeField] GameObject Timer;
+    timer timer;
+    void Start()
+    {
+        timer = Timer.gameObject.GetComponent<timer>();
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("engrane"))
+        {
+            Debug.Log("callese alv");
+            timer.pretime += 60;
+        }
+    }
+}
