@@ -1,0 +1,59 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class characterMovement : MonoBehaviour
+{
+    public float displacementVelocity = 4f;
+    [SerializeField] float displacementCarryingVelocity = 2.5f;
+    float velocity;
+    Transform transformChild;
+    Animator animator;
+    Rigidbody rb;
+    Life alive;
+    [SerializeField] string horizontal="", vertical="";
+    Grab_and_drop pick;
+
+
+    void Start()
+    {
+        animator = GetComponentInChildren<Animator>();
+        transformChild = GetComponentInChildren<Transform>();
+        rb = GetComponent<Rigidbody>();
+        alive = GetComponent<Life>();
+        pick = GetComponent<Grab_and_drop>();
+    }
+
+    void Update()
+    {
+        if (alive.life > 0)//No se puede mover si la vida es menor que cero
+        {
+            Movement();
+        }
+    }
+
+    void Movement()
+    {
+        if (pick.grabed){//Este if cambia la velocidad dependiendo si está agarrando un objeto o no
+            animator.SetBool("IsCarrying", true);
+            velocity = displacementCarryingVelocity;
+        }
+        else{
+            animator.SetBool("IsCarrying", false);
+            velocity = displacementVelocity;
+        }
+        float directionZ = Input.GetAxis(vertical);
+        float directionX = Input.GetAxis(horizontal);
+        Vector3 direction = new Vector3(directionX, 0, directionZ).normalized;
+        Vector3 movement = direction * velocity * Time.deltaTime;
+        rb.MovePosition(rb.position + movement);
+
+        if (direction != Vector3.zero){
+            transformChild.forward = direction; //Para que el personaje gire hacia donde se está moviendo
+            animator.SetBool("IsRunning", true);
+        }
+        else{
+            animator.SetBool("IsRunning", false);
+        }
+    }
+}
