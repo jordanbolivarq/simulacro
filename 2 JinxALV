@@ -1,0 +1,48 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class JinxALV : MonoBehaviour
+{
+    public bool kill = false;
+    characterMovement characterMovement;
+    float normalVelocity;
+    float timer = 0;
+    bool count = false; 
+    
+
+    void Start()
+    {
+        characterMovement = gameObject.GetComponent<characterMovement>();
+        normalVelocity = characterMovement.displacementVelocity;
+    }
+
+    void Update()
+    {
+        Timer();
+    }
+    
+    void Timer()
+    {
+        if (kill == true)
+        {
+            characterMovement.displacementVelocity = normalVelocity * 1.25f ;
+            count = true;
+        }
+        else
+        {
+            characterMovement.displacementVelocity = normalVelocity;
+        }
+        if (count == true)
+        {
+            timer += Time.deltaTime;
+        }
+
+        if (timer >= 3)
+        {
+            kill = false;
+            count = false;
+            timer = 0;
+        }
+    }
+}
